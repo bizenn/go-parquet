@@ -3,6 +3,11 @@ define thrift
 	go fmt ./gen-go/parquet
 endef
 
+.PHONY: test
+
+test:
+	@go test -v .
+
 gen-go/parquet/parquet.go: parquet-format/src/main/thrift/parquet.thrift
 	$(call thrift,$^,.)
 
