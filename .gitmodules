@@ -1,3 +1,6 @@
 [submodule "parquet-format"]
 	path = parquet-format
 	url = https://github.com/apache/parquet-format.git
+[submodule "vendor/git.apache.org/thrift.git"]
+	path = vendor/git.apache.org/thrift.git
+	url = https://github.com/apache/thrift.git
