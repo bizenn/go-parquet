@@ -3,7 +3,7 @@ define thrift
 	go fmt ./gen-go/parquet
 endef
 
-.PHONY: test
+.PHONY: test submodules
 
 test:
 	@go test -v .
@@ -11,5 +11,5 @@ test:
 gen-go/parquet/parquet.go: parquet-format/src/main/thrift/parquet.thrift
 	$(call thrift,$^,.)
 
-parquet-format/src/main/thrift/parquet.thrift:
+submodules:
 	git submodule update -i
