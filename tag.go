@@ -13,16 +13,6 @@ const (
 	tagName = "parquet"
 )
 
-var t gparq.Type
-
-// ColumnType ...
-type ColumnType struct {
-	Name      string
-	Type      string
-	Precision int32
-	Scale     int32
-}
-
 var (
 	nameMatcher      = regexp.MustCompile(`^[_[:alpha:]][_[:alnum:]]*`)
 	delimiterMatcher = regexp.MustCompile(`^\s*,\s*`)
@@ -33,7 +23,7 @@ var (
 
 func int32p(v int64) *int32 { vv := int32(v); return &vv }
 
-// tag := parquet:"<columnName>,<type_descriptor>"
+// tag := parquet:"<columnName>,<type_descriptor>,<repetition_type>"
 // columnName := valid parquet column name
 // type_descriptor :=  BOOLEAN | INT32 | INT64 | FLOAT | DOUBLE | BYTE_ARRAY | FIXED_LEN_BYTE_ARRAY(len) \
 //                     | UTF8 | INT_8 | INT_16 | INT_32 | INT_64 | UINT_8 | UINT_16 | UINT_32 | UINT_64 \
@@ -41,6 +31,7 @@ func int32p(v int64) *int32 { vv := int32(v); return &vv }
 //                     | DATE | TIME_MILLIS | TIME_MICROS | TIMESTAMP_MILLIS | TIMESTAMP_MICROS | INTERVAL
 //                     | JSON | BSON
 // Currently unsupported: Nested Types
+// repetition_type := REQUIRED | OPTIONAL | REPEATED
 func parseTag(stag reflect.StructTag) (se *gparq.SchemaElement, err error) {
 	tag := string(stag)
 	var is []int
