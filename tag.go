@@ -32,8 +32,7 @@ func int32p(v int64) *int32 { vv := int32(v); return &vv }
 //                     | JSON | BSON
 // Currently unsupported: Nested Types
 // repetition_type := REQUIRED | OPTIONAL | REPEATED
-func parseTag(stag reflect.StructTag) (se *gparq.SchemaElement, err error) {
-	tag := string(stag)
+func parseTag(tag string) (se *gparq.SchemaElement, err error) {
 	var is []int
 	var name, typ, repType string
 	var precision, scale int64
@@ -80,4 +79,21 @@ func parseTag(stag reflect.StructTag) (se *gparq.SchemaElement, err error) {
 		err = setupSchemaElement(se, name, typ, repType, precision, scale)
 	}
 	return se, err
+}
+
+func makeSchemaElements(t reflect.Type) (ses []*gparq.SchemaElement, err error) {
+	if t.Kind() != reflect.Struct {
+		err = fmt.Errorf("Only struct can be converted to SchemaElements but got: %s", t.Kind().String())
+	} else {
+		ses = make([]*gparq.SchemaElement, t.NumField(), t.NumField())
+		for i := 0; i < t.NumField(); i++ {
+			st := t.Field(i)
+			var se *gparq.SchemaElement
+			if se, err = parseTag(st.Tag.Get(tagName)); err != nil {
+				break
+			}
+			ses[i] = se
+		}
+	}
+	return ses, err
 }

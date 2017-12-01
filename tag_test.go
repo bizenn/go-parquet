@@ -1,7 +1,6 @@
 package parquet
 
 import (
-	"reflect"
 	"testing"
 
 	g "github.com/bizenn/go-parquet/gen-go/parquet"
@@ -172,7 +171,7 @@ func TestParseTag(t *testing.T) {
 		{"bson,BSON", newSchemaElement("bson", g.Type_BYTE_ARRAY, g.ConvertedType_BSON, g.FieldRepetitionType_OPTIONAL, -1, -1, -1)},
 	}
 	for _, data := range dataSet {
-		result, err := parseTag(reflect.StructTag(data.tag))
+		result, err := parseTag(data.tag)
 		if err != nil {
 			t.Errorf("%v: Unexpected error: %s", data.tag, err)
 		} else {
