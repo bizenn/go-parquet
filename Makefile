@@ -6,7 +6,7 @@ endef
 .PHONY: test submodules
 
 test:
-	@go test -v .
+	@go test ./...
 
 gen-go/parquet/parquet.go: parquet-format/src/main/thrift/parquet.thrift
 	$(call thrift,$^,.)
