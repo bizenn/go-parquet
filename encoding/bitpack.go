@@ -25,18 +25,28 @@ func uleb128encode(n uint32) (buf []byte) {
 	return buf
 }
 
-func uleb128decode(buf []byte) (n uint32) {
+func uleb128decode(buf []byte) (n uint32, count int) {
 	var s uint32
-	for _, b := range buf {
+	for i, b := range buf {
 		n |= uint32(b&0x7f) << s
 		if b&0x80 == 0 {
+			count = 1 + i
 			break
 		}
 		s += 7
 	}
-	return n
+	return n, count
 }
 
 func bitpackBools(bs []bool) (buf []byte, err error) {
+	byteCount := (len(bs) + 7) / 8
+	header := uleb128encode(uint32(byteCount<<1 | 1))
+	buf = make([]byte, byteCount, byteCount)
+	for i, b := range bs {
+		if b {
+			buf[i/8] |= 1 << uint(i%8)
+		}
+	}
+	buf = append(header, buf...)
 	return buf, err
 }

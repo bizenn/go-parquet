@@ -44,8 +44,8 @@ func TestULEB128(t *testing.T) {
 		if !eqvBytes(p.encoded, uleb128encode(p.decoded)) {
 			t.Errorf("Expected %x but got %x", p.encoded, uleb128encode(p.decoded))
 		}
-		if p.decoded != uleb128decode(p.encoded) {
-			t.Errorf("Expected %b but got %b", p.decoded, uleb128decode(p.encoded))
+		if n, count := uleb128decode(p.encoded); n != p.decoded || count != len(p.encoded) {
+			t.Errorf("Expected %b but got %b", p.decoded, n)
 		}
 	}
 }
